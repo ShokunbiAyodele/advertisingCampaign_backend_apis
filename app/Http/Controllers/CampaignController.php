@@ -24,7 +24,6 @@ class CampaignController extends Controller
         $dailyBudget = '';
         $totalBudget = '';
 
-
         if(strpos($request->input('dailyBudget'), '.') !== false){
             $dailyBudget = number_format(preg_replace('/[^\\d.]+/', '',$request->input('dailyBudget')),2,'.',',');
         }else{
@@ -37,15 +36,18 @@ class CampaignController extends Controller
             $totalBudget = preg_replace('/[^\\d.]+/', '',$request->input('totalBudget')) . '.'.'00';
         }
 
+
         $campaignPost =  DB::table('campaign_posts')->insert([
             'name'  =>  $request->input('name'),
-            'to'  => Carbon::parse($request->input('to')),
-            'from'  =>   Carbon::parse($request->input('from')),
+            'to'  => Carbon::createFromFormat('Y-m-d',$request->input('to')),
+            'from'  =>   Carbon::createFromFormat('Y-m-d',$request->input('from')),
              'dailyBudget'  =>  '$'.$dailyBudget,
             'totalBudget'  =>  '$'.$totalBudget,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
       ]);
+
+
 
       $insertedId = DB::getPdo()->lastInsertId();
 
